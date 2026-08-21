@@ -31,5 +31,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["meridian-sim/**/*.ts"]
+  "include": ["src/**/*.ts", "meridian-sim/**/*.ts"]
 }
