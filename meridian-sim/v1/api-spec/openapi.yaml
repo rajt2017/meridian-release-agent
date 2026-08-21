@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: Meridian Data Platform API
+  description: |
+    Meridian ships a hosted data platform for storing, querying, and managing
+    customer records. This specification covers the Q3 2025 quarterly release (v1).
+  version: 1.0.0
+  contact:
+    name: Meridian API Support
+    email: api-support@meridian.example
+
+servers:
+  - url: https://api.meridian.example/v1
+    description: Production
+  - url: https://sandbox.meridian.example/v1
+    description: Sandbox
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /list-records:
+    get:
+      operationId: listRecords
+      summary: List records
+      description: |
+        Returns all records for the authenticated account.
+        Optionally filter by exact status via the `filter` query parameter.
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          description: Exact status match (e.g. `active`, `archived`).
+          schema:
+            type: string
+            enum: [active, archived]
+      responses:
+        "200":
+          description: Record list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListRecordsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /get-profile:
+    get:
+      operationId: getProfile
+      summary: Get user profile
+      description: Fetches a user profile by `user_id`.
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          description: Meridian user identifier.
+          schema:
+            type: string
+            example: usr_1001
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /create-record:
+    post:
+      operationId: createRecord
+      summary: Create a record
+      description: |
+        Creates a new record from the provided `data` payload.
+        The response includes the assigned storage `region`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRecordRequest"
+      responses:
+        "201":
+          description: Record created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateRecordResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /search:
+    get:
+      operationId: search
+      summary: Search records
+      description: |
+        Searches records by name. **v1 returns exact matches only** —
+        partial and fuzzy matching are not supported.
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Exact record name to match.
+          schema:
+            type: string
+            example: customer-events
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key issued from the Meridian dashboard.
+
+  schemas:
+    RecordItem:
+      type: object
+      required: [id, name, status, created_at]
+      properties:
+        id:
+          type: string
+          example: rec_001
+        name:
+          type: string
+          example: customer-events
+        status:
+          type: string
+          enum: [active, archived]
+        created_at:
+          type: string
+          format: date-time
+
+    ListRecordsResponse:
+      type: object
+      required: [records, count]
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecordItem"
+        count:
+          type: integer
+
+    UserProfile:
+      type: object
+      required: [user_id, email, display_name, plan]
+      properties:
+        user_id:
+          type: string
+        email:
+          type: string
+          format: email
+        display_name:
+          type: string
+        plan:
+          type: string
+          enum: [free, pro, enterprise]
+
+    CreateRecordRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Arbitrary record payload.
+          example:
+            name: inventory-sync
+            tags: [ops, nightly]
+
+    CreateRecordResponse:
+      type: object
+      required: [id, region, created_at]
+      properties:
+        id:
+          type: string
+          example: rec_482910
+        region:
+          type: string
+          description: Storage region assigned to the new record.
+          example: us-east-1
+        created_at:
+          type: string
+          format: date-time
+
+    SearchResponse:
+      type: object
+      required: [results, match_mode, count]
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecordItem"
+        match_mode:
+          type: string
+          enum: [exact]
+          description: Always `exact` in v1.
+        count:
+          type: integer
+
+    Error:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    BadRequest:
+      description: Invalid or missing parameters
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
