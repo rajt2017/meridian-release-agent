@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meridian Quarterly Release Readiness Report</title>
+  <style>
+    :root {
+      --breaking-bg: #FCEBEB;
+      --breaking-border: #F09595;
+      --breaking-text: #501313;
+      --additive-bg: #EAF3DE;
+      --additive-border: #97C459;
+      --additive-text: #173404;
+      --ambiguous-bg: #FAEEDA;
+      --ambiguous-border: #EF9F27;
+      --ambiguous-text: #412402;
+      --advisory: #378ADD;
+      --muted: #6B7280;
+      --line: #E5E7EB;
+      --ink: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+    }
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 32px 64px;
+    }
+    h2 {
+      font-size: 18px;
+      margin: 36px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-start;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-title { font-size: 22px; font-weight: 700; margin: 0; }
+    .brand-sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    .meta { text-align: right; color: var(--muted); font-size: 13px; }
+    .meta div { margin: 2px 0; }
+    .meta .run-id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+
+    /* Verdict */
+    .verdict {
+      margin-top: 24px;
+      border-radius: 12px;
+      border: 1px solid var(--breaking-border);
+      background: var(--breaking-bg);
+      color: var(--breaking-text);
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .verdict-ready {
+      border-color: var(--additive-border);
+      background: var(--additive-bg);
+      color: var(--additive-text);
+    }
+    .verdict-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .verdict-label {
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 11px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      opacity: 0.85;
+    }
+    .verdict-title { margin: 0 0 6px; font-size: 24px; font-weight: 700; }
+    .verdict-body { margin: 0; font-size: 14px; }
+
+    /* Summary card */
+    .summary-card {
+      background: #F3F4F6;
+      border-radius: 12px;
+      padding: 16px 18px;
+      color: #1F2937;
+      font-size: 14px;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .stat {
+      border-radius: 12px;
+      border: 1px solid;
+      padding: 16px;
+    }
+    .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; }
+    .stat-value { font-size: 32px; font-weight: 700; margin-top: 4px; }
+    .stat-breaking { background: var(--breaking-bg); border-color: var(--breaking-border); color: var(--breaking-text); }
+    .stat-additive { background: var(--additive-bg); border-color: var(--additive-border); color: var(--additive-text); }
+    .stat-ambiguous { background: var(--ambiguous-bg); border-color: var(--ambiguous-border); color: var(--ambiguous-text); }
+
+    /* Legend */
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      background: #F3F4F6;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 13px;
+    }
+    .legend-item { display: flex; gap: 8px; align-items: flex-start; }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .dot-additive { background: #97C459; }
+    .dot-breaking { background: #F09595; }
+    .dot-ambiguous { background: #EF9F27; }
+
+    /* Inventory table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th {
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    td {
+      padding: 12px;
+      vertical-align: top;
+      border-bottom: 1px solid #F3F4F6;
+    }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 600; }
+    .center { text-align: center; }
+    .row-additive { background: var(--additive-bg); color: var(--additive-text); }
+    .row-breaking { background: var(--breaking-bg); color: var(--breaking-text); }
+    .row-ambiguous { background: var(--ambiguous-bg); color: var(--ambiguous-text); }
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid;
+    }
+    .badge-additive { background: #ffffff; border-color: var(--additive-border); color: var(--additive-text); }
+    .badge-breaking { background: #ffffff; border-color: var(--breaking-border); color: var(--breaking-text); }
+    .badge-ambiguous { background: #ffffff; border-color: var(--ambiguous-border); color: var(--ambiguous-text); }
+    .ok { color: #173404; font-weight: 700; }
+    .bad { color: #501313; font-weight: 700; }
+    .na { color: #6B7280; }
+
+    /* Recommended actions */
+    .priority {
+      border-radius: 12px;
+      border: 1px solid;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .priority-header {
+      padding: 10px 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .priority-body { padding: 8px 14px 14px; background: #fff; }
+    .p0 { border-color: var(--breaking-border); }
+    .p0 .priority-header { background: var(--breaking-bg); color: var(--breaking-text); }
+    .p1 { border-color: var(--ambiguous-border); }
+    .p1 .priority-header { background: var(--ambiguous-bg); color: var(--ambiguous-text); }
+    .p2 { border-color: var(--additive-border); }
+    .p2 .priority-header { background: var(--additive-bg); color: var(--additive-text); }
+    .action-list {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+      counter-reset: actions;
+    }
+    .action-list li {
+      counter-increment: actions;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 8px 0;
+      border-bottom: 1px solid #F3F4F6;
+      font-size: 14px;
+    }
+    .action-list li:last-child { border-bottom: none; }
+    .action-list li::before {
+      content: counter(actions);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .p0 .action-list li::before { color: var(--breaking-text); }
+    .p1 .action-list li::before { color: var(--ambiguous-text); }
+    .p2 .action-list li::before { color: var(--additive-text); }
+    .empty-actions { margin: 0; color: var(--muted); font-size: 13px; }
+
+    /* Advisory */
+    .advisory {
+      border-left: 4px solid var(--advisory);
+      background: #F8FBFF;
+      border-radius: 0 12px 12px 0;
+      padding: 14px 16px;
+    }
+    .advisory-label {
+      margin: 0 0 6px;
+      font-weight: 700;
+      color: #0B3B6E;
+      font-size: 14px;
+    }
+    .advisory-body { margin: 0; font-size: 13px; color: #1F2937; }
+
+    /* Footer */
+    .footer {
+      margin-top: 36px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 800px) {
+      .stats, .legend { grid-template-columns: 1fr; }
+      .header { flex-direction: column; }
+      .meta { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- HEADER: product name on the left, date/time/run id on the right -->
+    <header class="header">
+      <div>
+        <p class="brand-title">Meridian Data Platform</p>
+        <p class="brand-sub">Quarterly Release Readiness Report — v1 → v2</p>
+      </div>
+      <div class="meta">
+        <div>August 23, 2026</div>
+        <div>7:59:13 PM</div>
+        <div class="run-id">run-44f2edb4-6b1b-4d1d-9ca8-72f4bf9041ed</div>
+      </div>
+    </header>
+
+    <!-- VERDICT: big go / no-go banner for the release manager -->
+    <section class="verdict verdict-blocked" aria-label="Release verdict">
+      <div class="verdict-icon" aria-hidden="true">✕</div>
+      <div>
+        <p class="verdict-label">Release verdict</p>
+        <h1 class="verdict-title">Blocked — do not release</h1>
+        <p class="verdict-body">3 breaking changes found — 3 with unresolved SDK or runbook gaps. Release should not proceed until P0 items are closed and the agent is re-run.</p>
+      </div>
+    </section>
+
+    <!-- EXECUTIVE SUMMARY: plain-English overview of the run -->
+    <h2>Executive summary</h2>
+    <div class="summary-card">Meridian-sim v2 introduces seven changes spanning list sorting, a new analytics endpoint, field renames, response shape changes, timeout behavior, search semantics, and a required API version header. Only one of seven changes (C1) is fully aligned across all surfaces. Three breaking changes (C3, C4, C7) remain unmitigated in the SDK and/or runbooks, and two ambiguous changes (C5, C6) lack documentation or acknowledgment on any client-facing surface. Cross-surface analysis confirms systemic drift: 4 SDK gaps and 5 runbook gaps affect operator and integrator workflows. SDK clients calling v2 will fail on profile retrieval (C3) and every authenticated request (C7). Runbook-driven integrations will break on removed response fields (C4) and stale parameter names (C3). The new analytics endpoint (C2) is unreachable via the official SDK or operator documentation.</div>
+
+    <!-- STATS: live counts from the parsed change inventory -->
+    <h2>Change counts</h2>
+    <div class="stats">
+      <div class="stat stat-breaking">
+        <div class="stat-label">Breaking</div>
+        <div class="stat-value">3</div>
+      </div>
+      <div class="stat stat-additive">
+        <div class="stat-label">Additive</div>
+        <div class="stat-value">2</div>
+      </div>
+      <div class="stat stat-ambiguous">
+        <div class="stat-label">Ambiguous</div>
+        <div class="stat-value">2</div>
+      </div>
+    </div>
+
+    <!-- LEGEND: explain the three classification colors -->
+    <h2>Classification legend</h2>
+    <div class="legend">
+      <div class="legend-item">
+        <span class="dot dot-breaking"></span>
+        <span><strong>Breaking</strong> — something changed or removed. Existing integrations will fail.</span>
+      </div>
+      <div class="legend-item">
+        <span class="dot dot-additive"></span>
+        <span><strong>Additive</strong> — something new added. No existing integrations affected.</span>
+      </div>
+      <div class="legend-item">
+        <span class="dot dot-ambiguous"></span>
+        <span><strong>Ambiguous</strong> — behavior changed without the API spec changing. A standard diff tool would miss this.</span>
+      </div>
+    </div>
+
+    <!-- CHANGE INVENTORY: every change with SDK / runbook coverage -->
+    <h2>Change inventory</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Change</th>
+          <th>Classification</th>
+          <th>SDK</th>
+          <th>Runbook</th>
+          <th>Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-additive">
+              <td class="mono">C1</td>
+              <td>Optional sort_order on GET /list-records</td>
+              <td><span class="badge badge-additive">Additive</span></td>
+              <td class="center"><span class="ok">✓</span></td>
+              <td class="center"><span class="ok">✓</span></td>
+              <td>Fully covered</td>
+            </tr>
+<tr class="row-additive">
+              <td class="mono">C2</td>
+              <td>New GET /analytics endpoint</td>
+              <td><span class="badge badge-additive">Additive</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td>Gaps — unreachable via SDK/docs</td>
+            </tr>
+<tr class="row-breaking">
+              <td class="mono">C3</td>
+              <td>user_id → account_id rename</td>
+              <td><span class="badge badge-breaking">Breaking</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td>Gaps — runtime failures</td>
+            </tr>
+<tr class="row-breaking">
+              <td class="mono">C4</td>
+              <td>region removed from create-record response</td>
+              <td><span class="badge badge-breaking">Breaking</span></td>
+              <td class="center"><span class="ok">✓</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td>Gaps — runbook integrations break</td>
+            </tr>
+<tr class="row-ambiguous">
+              <td class="mono">C5</td>
+              <td>Backend-only 30,000 ms timeout</td>
+              <td><span class="badge badge-ambiguous">Ambiguous</span></td>
+              <td class="center"><span class="na">—</span></td>
+              <td class="center"><span class="na">—</span></td>
+              <td>Undocumented — no surface updated</td>
+            </tr>
+<tr class="row-ambiguous">
+              <td class="mono">C6</td>
+              <td>Search changed to fuzzy; contract says exact-only</td>
+              <td><span class="badge badge-ambiguous">Ambiguous</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td>Undocumented drift — silent behavior change</td>
+            </tr>
+<tr class="row-breaking">
+              <td class="mono">C7</td>
+              <td>Required api_version header</td>
+              <td><span class="badge badge-breaking">Breaking</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td class="center"><span class="bad">✗</span></td>
+              <td>Gaps — all SDK calls fail</td>
+            </tr>
+      </tbody>
+    </table>
+
+    <!-- RECOMMENDED ACTIONS: P0 / P1 / P2 with numbered circles -->
+    <h2>Recommended actions</h2>
+
+    <div class="priority p0">
+      <div class="priority-header"><span aria-hidden="true">⚠</span> P0 — Must fix before release</div>
+      <div class="priority-body"><ol class="action-list"><li><span class="action-text">Add api_version header to SDK and all runbook examples — without this every v2 API call fails</span></li><li><span class="action-text">Rename user_id to account_id in SDK models and all runbook documentation</span></li><li><span class="action-text">Remove region from runbook POST /create-record response — field no longer exists in v2</span></li></ol></div>
+    </div>
+
+    <div class="priority p1">
+      <div class="priority-header"><span aria-hidden="true">!</span> P1 — Should fix / resolve ambiguity</div>
+      <div class="priority-body"><ol class="action-list"><li><span class="action-text">Add analytics() method and runbook section for GET /analytics endpoint</span></li><li><span class="action-text">Resolve search behavior — update docs to fuzzy matching OR revert backend to exact only</span></li></ol></div>
+    </div>
+
+    <div class="priority p2">
+      <div class="priority-header"><span aria-hidden="true">ℹ</span> P2 — Acknowledge before release</div>
+      <div class="priority-body"><ol class="action-list"><li><span class="action-text">Document or acknowledge the 30s timeout change in runbook operational notes</span></li><li><span class="action-text">Publish a customer migration guide covering all breaking changes</span></li></ol></div>
+    </div>
+
+    <!-- ADVISORY: remind humans that this report does not auto-ship -->
+    <h2>Advisory note</h2>
+    <div class="advisory">
+      <p class="advisory-label">Human sign-off required before release</p>
+      <p class="advisory-body">This report is advisory. The Release Governance pipeline has classified artifacts, verified cross-artifact alignment, and applied release rules automatically. A human release manager must make the final sign-off decision before release proceeds. If the team chooses to ship despite documented gaps, that decision must be explicit, recorded, and accompanied by a customer migration plan. Verdict: BLOCKED reflects current artifact alignment only — re-run the agent after gaps are closed.</p>
+    </div>
+
+    <footer class="footer">
+      Generated by Release Governance Agent — Cursor SDK — Meridian Data Platform — August 23, 2026 · 7:59:13 PM
+    </footer>
+  </div>
+</body>
+</html>
