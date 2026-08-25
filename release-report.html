@@ -238,6 +238,18 @@
     .p1 .action-list li::before { color: var(--ambiguous-text); }
     .p2 .action-list li::before { color: var(--additive-text); }
     .empty-actions { margin: 0; color: var(--muted); font-size: 13px; }
+    .critical-badge {
+      display: inline-block;
+      margin: 0 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #F09595;
+      background: #FCEBEB;
+      color: #501313;
+      font-size: 11px;
+      font-weight: 700;
+      vertical-align: middle;
+    }
 
     /* Advisory */
     .advisory {
@@ -279,9 +291,9 @@
         <p class="brand-sub">Quarterly Release Readiness Report — v1 → v2</p>
       </div>
       <div class="meta">
-        <div>August 23, 2026</div>
-        <div>8:19:46 PM</div>
-        <div class="run-id">run-rebuild</div>
+        <div>August 24, 2026</div>
+        <div>10:32:23 PM</div>
+        <div class="run-id">run-a8df2de7-ade5-4fd7-bbcd-e0e8c84d5528</div>
       </div>
     </header>
 
@@ -361,7 +373,7 @@
               <td><span class="badge badge-additive">Additive</span></td>
               <td class="center"><span class="bad">✗</span></td>
               <td class="center"><span class="bad">✗</span></td>
-              <td>Gaps — unreachable via SDK/docs</td>
+              <td>Gaps</td>
             </tr>
 <tr class="row-breaking">
               <td class="mono">C3</td>
@@ -385,7 +397,7 @@
               <td><span class="badge badge-ambiguous">Ambiguous</span></td>
               <td class="center"><span class="na">—</span></td>
               <td class="center"><span class="na">—</span></td>
-              <td>Undocumented — no surface updated</td>
+              <td>Undocumented</td>
             </tr>
 <tr class="row-ambiguous">
               <td class="mono">C6</td>
@@ -393,7 +405,7 @@
               <td><span class="badge badge-ambiguous">Ambiguous</span></td>
               <td class="center"><span class="bad">✗</span></td>
               <td class="center"><span class="bad">✗</span></td>
-              <td>Undocumented drift — silent behavior change</td>
+              <td>Undocumented drift</td>
             </tr>
 <tr class="row-breaking">
               <td class="mono">C7</td>
@@ -411,17 +423,17 @@
 
     <div class="priority p0">
       <div class="priority-header"><span aria-hidden="true">⚠</span> P0 — Must fix before release</div>
-      <div class="priority-body"><ol class="action-list"><li><span class="action-text">Add api_version header to SDK and all runbook examples — without this every v2 API call fails</span></li><li><span class="action-text">Rename user_id to account_id in SDK models and all runbook documentation</span></li><li><span class="action-text">Remove region from runbook POST /create-record response — field no longer exists in v2</span></li></ol></div>
+      <div class="priority-body"><ol class="action-list"><li><span class="action-text">C3 — Rename user_id to account_id in SDK models and all runbook documentation</span></li><li><span class="action-text">C4 — Remove region from runbook POST /create-record response — field no longer exists in v2</span></li><li><span class="action-text">C7 <span class="critical-badge">⚠ Most critical</span> — Add api_version header to SDK and all runbook examples — without this every v2 API call fails</span></li></ol></div>
     </div>
 
     <div class="priority p1">
       <div class="priority-header"><span aria-hidden="true">!</span> P1 — Should fix / resolve ambiguity</div>
-      <div class="priority-body"><ol class="action-list"><li><span class="action-text">Add analytics() method and runbook section for GET /analytics endpoint</span></li><li><span class="action-text">Resolve search behavior — update docs to fuzzy matching OR revert backend to exact only</span></li></ol></div>
+      <div class="priority-body"><ol class="action-list"><li><span class="action-text">C5 — Document or acknowledge the 30-second timeout change in runbook operational notes</span></li><li><span class="action-text">C6 — Resolve search behavior — update docs to fuzzy matching OR revert backend to exact only. Record the product decision.</span></li></ol></div>
     </div>
 
     <div class="priority p2">
       <div class="priority-header"><span aria-hidden="true">ℹ</span> P2 — Acknowledge before release</div>
-      <div class="priority-body"><ol class="action-list"><li><span class="action-text">Document or acknowledge the 30s timeout change in runbook operational notes</span></li><li><span class="action-text">Publish a customer migration guide covering all breaking changes</span></li></ol></div>
+      <div class="priority-body"><ol class="action-list"><li><span class="action-text">C2 — Add analytics() method and runbook section for GET /analytics endpoint</span></li><li><span class="action-text">Publish a customer migration guide covering all breaking changes</span></li></ol></div>
     </div>
 
     <!-- ADVISORY: remind humans that this report does not auto-ship -->
@@ -432,7 +444,7 @@
     </div>
 
     <footer class="footer">
-      Generated by Release Governance Agent — Cursor SDK — Meridian Data Platform — August 23, 2026 · 8:19:46 PM
+      Generated by Release Governance Agent — Cursor SDK — Meridian Data Platform — August 24, 2026 · 10:32:23 PM
     </footer>
   </div>
 </body>
