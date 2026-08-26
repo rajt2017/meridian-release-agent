@@ -1,0 +1,104 @@
+<mxfile host="65bd71144e">
+    <diagram id="1UyuVf5h5_LybeNEkodH" name="Page-1">
+        <mxGraphModel dx="1374" dy="606" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="v1bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;opacity=50;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="20" width="620" height="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="v1title" value="&lt;b&gt;V1 — Last Release (In Sync)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#1a3d1a;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="28" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="back1" value="&lt;b&gt;Backend&lt;/b&gt;&lt;br&gt;- fn&lt;br&gt;- fm&lt;br&gt;- Runbooks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;arcSize=8;fontColor=#1a3d5e;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="75" width="150" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="api1" value="&lt;b&gt;APIs&lt;/b&gt;&lt;br&gt;YAML — fn, fm&lt;br&gt;(OpenAPI generator)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontColor=#3d1d5e;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="60" width="160" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="docs1" value="&lt;b&gt;Docs&lt;/b&gt;&lt;br&gt;- fn&lt;br&gt;- fm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d6b656;fontSize=12;arcSize=8;fontColor=#7d4000;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="80" width="140" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="py1" value="&lt;b&gt;Python SDK&lt;/b&gt;&lt;br&gt;- fn&lt;br&gt;&amp;nbsp;- fm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;arcSize=8;fontColor=#1a3d1a;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="220" width="130" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="ts1" value="&lt;b&gt;TypeScript SDK&lt;/b&gt;&lt;br&gt;- fn&lt;br&gt;- fm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;arcSize=8;fontColor=#1a3d1a;" parent="1" vertex="1">
+                    <mxGeometry x="205" y="220" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="java1" value="&lt;b&gt;Java SDK&lt;/b&gt;&lt;br&gt;- fn&lt;br&gt;- fm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;arcSize=8;fontColor=#1a3d1a;" parent="1" vertex="1">
+                    <mxGeometry x="365" y="220" width="130" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;strokeWidth=2;" parent="1" source="api1" target="back1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;strokeWidth=2;" parent="1" source="api1" target="docs1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;strokeWidth=2;" parent="1" source="api1" target="py1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="320" y="190"/>
+                            <mxPoint x="115" y="190"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;strokeWidth=2;" parent="1" source="api1" target="ts1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;strokeWidth=2;" parent="1" source="api1" target="java1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff0f0;strokeColor=#E24B4A;strokeWidth=3;opacity=50;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="340" width="620" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2title" value="&lt;b&gt;&lt;font color=&quot;#A32D2D&quot;&gt;V2 — Current Release (Drifted) ⚠&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="348" width="360" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2sub" value="&lt;font color=&quot;#791F1F&quot;&gt;One API spec error cascades to all downstream surfaces&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="375" width="500" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="back2" value="&lt;b&gt;Backend&lt;/b&gt;&lt;br&gt;- f1 ✓ (correct)&lt;br&gt;- f2 all fields req&lt;br&gt;- updated fn&lt;br&gt;- removed fm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;arcSize=8;fontColor=#1a3d5e;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="400" width="150" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="api2" value="&lt;b&gt;&lt;font color=&quot;#A32D2D&quot;&gt;APIs ⚠&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#A32D2D&quot;&gt;&lt;b&gt;f1_delta (ERROR!)&lt;br&gt;&lt;/b&gt;f2 field A optional&lt;br&gt;updated fn&lt;br&gt;removed fm&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FCEBEB;strokeColor=#E24B4A;fontSize=12;strokeWidth=3;" parent="1" vertex="1">
+                    <mxGeometry x="232" y="400" width="176" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="docs2" value="&lt;b&gt;&lt;font color=&quot;#A32D2D&quot;&gt;Docs ⚠&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#A32D2D&quot;&gt;f1_delta&lt;br&gt;f2 field A optional&lt;br&gt;updated fn&lt;br&gt;removed fm&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCEBEB;strokeColor=#E24B4A;fontSize=12;arcSize=8;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="48" y="410" width="150" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="py2" value="&lt;b&gt;&lt;font color=&quot;#A32D2D&quot;&gt;Python SDK ⚠&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#A32D2D&quot;&gt;f1_delta&lt;br&gt;f2 field A optional&lt;br&gt;updated fn&lt;br&gt;removed fm&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCEBEB;strokeColor=#E24B4A;fontSize=12;arcSize=8;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="48" y="575" width="135" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="ts2" value="&lt;b&gt;&lt;font color=&quot;#A32D2D&quot;&gt;TypeScript SDK ⚠&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#A32D2D&quot;&gt;f1_delta&lt;br&gt;f2 field A optional&lt;br&gt;updated fn&lt;br&gt;removed fm&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCEBEB;strokeColor=#E24B4A;fontSize=12;arcSize=8;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="205" y="575" width="145" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="java2" value="&lt;b&gt;&lt;font color=&quot;#A32D2D&quot;&gt;Java SDK ⚠&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#A32D2D&quot;&gt;f1_delta&lt;br&gt;f2 field A optional&lt;br&gt;updated fn&lt;br&gt;removed fm&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCEBEB;strokeColor=#E24B4A;fontSize=12;arcSize=8;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="365" y="575" width="135" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E24B4A;strokeWidth=2;" parent="1" source="api2" target="back2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E24B4A;strokeWidth=2;" parent="1" source="api2" target="docs2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E24B4A;strokeWidth=2;" parent="1" source="api2" target="py2" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="320" y="560"/>
+                            <mxPoint x="116" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E24B4A;strokeWidth=2;" parent="1" source="api2" target="ts2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E24B4A;strokeWidth=2;" parent="1" source="api2" target="java2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="caption" value="&lt;font color=&quot;#A32D2D&quot;&gt;&lt;b&gt;This is what the release governance agent catches before release day.&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="718" width="500" height="25" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
