@@ -180,8 +180,10 @@ function parseClassification(raw: string): Classification | null {
     .toUpperCase()
     .replace(/[*_`]/g, "")
     .replace(/\s+/g, " ");
-  // Check AMBIGUOUS before anything that could be a substring collision.
+  // Behavioral breaking (and legacy AMBIGUOUS) — check before plain BREAKING.
   if (/\bAMBIGUOUS\b/.test(value)) return "AMBIGUOUS";
+  if (/\bBEHAVIORAL\b/.test(value)) return "AMBIGUOUS";
+  if (/BREAKING\s*[—–-]\s*BEHAVIORAL/.test(value)) return "AMBIGUOUS";
   if (/\bADDITIVE\b/.test(value)) return "ADDITIVE";
   if (/\bBREAKING\b/.test(value)) return "BREAKING";
   return null;
@@ -406,7 +408,7 @@ function extractChangeRows(markdown: string): ChangeRow[] {
   // Fallback pattern for older/newer pipe tables if the section parse found nothing.
   if (changes.length === 0) {
     const looseRegex =
-      /\|\s*(C[1-7]|CHANGE[_\s-]?[1-7])\s*\|\s*(?:([^|]*?)\s*\|\s*)?\**\s*(ADDITIVE|BREAKING|AMBIGUOUS)\s*\**\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|/gi;
+      /\|\s*(C[1-7]|CHANGE[_\s-]?[1-7])\s*\|\s*(?:([^|]*?)\s*\|\s*)?\**\s*(ADDITIVE|BREAKING(?:\s*[—–-]\s*BEHAVIORAL)?|BEHAVIORAL|AMBIGUOUS)\s*\**\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|/gi;
     for (const match of markdown.matchAll(looseRegex)) {
       const id = (match[1] ?? "").replace(/\s+/g, "_").trim();
       if (!id || seen.has(id.toUpperCase()) || !isCorePlantedChange(id)) continue;
@@ -664,7 +666,7 @@ function badgeFor(classification: Classification): string {
       ? "Additive"
       : classification === "BREAKING"
         ? "Breaking"
-        : "Ambiguous";
+        : "Behavioral";
   return `<span class="badge badge-${classification.toLowerCase()}">${label}</span>`;
 }
 
@@ -701,13 +703,13 @@ function buildReleaseReportHtml(parsed: ParsedReport, runId: string, now: Date):
 
   // Demo report uses a fixed, interview-friendly executive summary.
   const executiveSummary =
-    "Meridian v2 introduces 7 changes across backend, API spec, SDK, and runbooks — 3 breaking, 2 additive, and 2 ambiguous. Release is blocked until all P0 items are resolved and the agent is re-run.";
+    "Meridian v2 introduces 7 changes across backend, API spec, SDK, and runbooks — 3 breaking, 2 additive, and 2 behavioral breaking. Release is blocked until all P0 items are resolved and the agent is re-run.";
 
   const verdictTitle = parsed.blocked ? "Blocked — do not release" : "Ready to release";
   const verdictClass = parsed.blocked ? "verdict-blocked" : "verdict-ready";
   const verdictIcon = parsed.blocked ? "✕" : "✓";
   const verdictExplain = parsed.blocked
-    ? `${breakingCount} breaking change${breakingCount === 1 ? "" : "s"} found — ${breakingWithGaps} with unresolved SDK or runbook gaps. Release should not proceed until P0 items are closed and the agent is re-run.`
+    ? "3 breaking changes and 2 behavioral breaking changes found. Release should not proceed until P0 items are closed and the agent is re-run."
     : "No unresolved breaking or ambiguous gaps were found. A human release manager should still confirm before shipping.";
 
   const tableRows =
@@ -1061,7 +1063,7 @@ function buildReleaseReportHtml(parsed: ParsedReport, runId: string, now: Date):
         <div class="stat-value">${additiveCount}</div>
       </div>
       <div class="stat stat-ambiguous">
-        <div class="stat-label">Ambiguous</div>
+        <div class="stat-label">BEHAVIORAL</div>
         <div class="stat-value">${ambiguousCount}</div>
       </div>
     </div>
@@ -1079,7 +1081,7 @@ function buildReleaseReportHtml(parsed: ParsedReport, runId: string, now: Date):
       </div>
       <div class="legend-item">
         <span class="dot dot-ambiguous"></span>
-        <span><strong>Ambiguous</strong> — behavior changed without the API spec changing. A standard diff tool would miss this.</span>
+        <span><strong>Breaking — behavioral</strong>: the interface looks identical but behavior changed underneath. A standard diff tool would miss this.</span>
       </div>
     </div>
 
@@ -1110,7 +1112,7 @@ function buildReleaseReportHtml(parsed: ParsedReport, runId: string, now: Date):
     </div>
 
     <div class="priority p1">
-      <div class="priority-header"><span aria-hidden="true">!</span> P1 — Should fix / resolve ambiguity</div>
+      <div class="priority-header"><span aria-hidden="true">!</span> P1 — Should fix — behavioral breaking changes</div>
       <div class="priority-body">${numberedActions(parsed.p1)}</div>
     </div>
 
@@ -1242,7 +1244,8 @@ Return ONLY valid JSON — no markdown fences, no commentary.`,
       /* ---------------------------------------------------------------------
        * SPECIALIST 2 — Judge ("how risky is each change?")
        *
-       * What: Labels every Watcher item as ADDITIVE, BREAKING, or AMBIGUOUS.
+       * What: Labels every Watcher item as ADDITIVE, BREAKING, or
+       *       BREAKING — BEHAVIORAL (interface unchanged, runtime changed).
        * Why:  Release managers need a clear risk bucket, not a raw file diff.
        *       Uses the stronger composer-2.5 model because this judgment call
        *       is the hardest part of the pipeline.
@@ -1250,7 +1253,7 @@ Return ONLY valid JSON — no markdown fences, no commentary.`,
        * ------------------------------------------------------------------- */
       judge: {
         description:
-          "Classifies each Watcher change as ADDITIVE, BREAKING, or AMBIGUOUS with a one-line reason. Use after Watcher.",
+          "Classifies each Watcher change as ADDITIVE, BREAKING, or BREAKING — BEHAVIORAL with a one-line reason. Use after Watcher.",
         // Stronger brain on purpose — wrong labels here poison the whole report.
         model: { id: "composer-2.5" },
         prompt: `You are the Judge for Meridian's quarterly release review.
@@ -1259,11 +1262,11 @@ You receive the Watcher's JSON list of changes. For each change, assign exactly 
 
 - ADDITIVE — new optional capability; existing clients keep working
 - BREAKING — existing clients will fail or must change (renames, removals, newly required fields/headers)
-- AMBIGUOUS — the published contract looks the same (or nearly so) but runtime behavior changed in a way that can surprise clients
+- BREAKING — BEHAVIORAL: the API interface looks identical but runtime behavior changed underneath. A standard diff tool would not catch this.
 
 For every item output:
 - id (same as Watcher)
-- classification (ADDITIVE | BREAKING | AMBIGUOUS)
+- classification (ADDITIVE | BREAKING | BREAKING — BEHAVIORAL)
 - reason (one plain-English sentence)
 
 Return ONLY valid JSON — an array of those objects. No markdown fences.`,
